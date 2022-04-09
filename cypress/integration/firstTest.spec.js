@@ -220,7 +220,7 @@ describe('Our first suite', () => {
         })
     })
 
-    it.only('Date Picker', () => {
+    it('Date Picker', () => {
         function selectDayFromCurrent(day) {
             let date = new Date()
             date.setDate(date.getDate() + day)
@@ -249,4 +249,38 @@ describe('Our first suite', () => {
         })
 
     })
+
+    it('Popups & ToolTips', () => {
+        cy.visit('/')
+        cy.contains('Modal & Overlays').click()
+        cy.contains('Tooltip').click()
+
+        cy.contains('nb-card', 'Colored Tooltips')
+            .contains('Default').click()
+        cy.get('nb-tooltip').should('contain', 'This is a tooltip')
+    })
+
+    //Popup from browser
+    it.only('Dialog box', () => {
+        cy.visit('/')
+        cy.contains('Tables & Data').click()
+        cy.contains('Smart Table').click()
+
+        cy.get('tbody tr').first().find('.nb-trash').click()
+
+        // Will pass even if no window confirm
+        cy.on('window:confirm', (confirm) => {
+            expect(confirm).to.equal("Are you sure you want to delete?")
+        })
+
+        const stub = cy.stub()
+        cy.on('window:confirm', stub)
+        cy.get('tbody tr').first().find('.nb-trash').click().then(() => {
+            expect(stub.getCall(0)).to.be.calledWith("Are you sure you want to delete?")
+        })
+
+        cy.get('tbody tr').first().find('.nb-trash').click()
+        cy.on('window:confirm', () => false)
+    })
+
 })
