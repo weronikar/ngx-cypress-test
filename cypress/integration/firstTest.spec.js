@@ -285,7 +285,7 @@ describe('Our first suite', () => {
     })
 
 
-    it.only('Assertions', () => {
+    it('Assertions', () => {
         cy.visit('/')
         cy.contains('Forms').click()
         cy.contains('Form Layouts').click()
